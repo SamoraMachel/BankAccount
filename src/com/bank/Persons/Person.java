@@ -1,20 +1,15 @@
 package com.bank.Persons;
 
-import java.util.Random;
-import java.util.UUID;
+import java.util.ArrayList;
 
 enum Gender {
     MALE, FEMALE
 }
 
-interface Person {
-    String id = UUID.randomUUID().toString();
-    String firstName = "";
-    String lastName = "";
-    Gender gender = Gender.MALE;
-    Number Contact = 0;
+public interface Person {
+    static ArrayList<Person> personList = new ArrayList<Person>();
 
-    boolean save();
-    boolean update();
-    boolean delete();
+    boolean save() throws Exception;
+    boolean delete() throws Exception;
+    <T> Class<?> personType();
 }
