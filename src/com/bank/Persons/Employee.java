@@ -1,9 +1,9 @@
 package com.bank.Persons;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Employee implements Person{
-    private String id = UUID.randomUUID().toString();
     private String firstName = "";
     private String lastName = "";
     private Gender gender = Gender.MALE;
@@ -15,8 +15,7 @@ public class Employee implements Person{
     }
 
     public Employee(String firstName, String lastName, long Contact, Gender gender) {
-        this.setName(firstName, lastName);
-        this.setContact(Contact);
+        this(firstName, lastName, Contact);
         this.setGender(gender);
     }
 
@@ -57,7 +56,6 @@ public class Employee implements Person{
         boolean isSaved = false;
         if(this.firstName.equals("") || this.lastName.equals("") || this.Contact == 0) {
             isSaved = false;
-
             throw new Exception("Cannot save Employee with empty attributes. Set the name and Contact of the person");
         } else if (isEmployeeSaved()) {
             throw new Exception("Employee is already saved");
@@ -83,55 +81,57 @@ public class Employee implements Person{
         return isDeleted;
     }
 
+
+
+    public static boolean delete(Employee e) throws Exception {
+        boolean isEmployeeInList = e.isEmployeeSaved();
+
+        if(!isEmployeeInList) {
+            throw new Exception("Could not delete an employee who has not been saved");
+        } else {
+            Person.personList.remove(e);
+            return true;
+        }
+    }
+
     @Override
     public Class<?> personType() {
         return this.getClass();
     }
 
     private boolean isEmployeeSaved() {
-        boolean isSaved = false;
         for(Person person : this.personList) {
             try {
                 if(person.personType() == Class.forName("com.bank.Persons.Employee")) {
                     Employee employee = ((Employee) person);
                     if (employee.id == this.id) {
-                        isSaved = true;
-                        break;
+                        return true;
                     }
 
                 }
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                System.out.println("--> Could not find the class for Employee");
+                System.out.println("--> Error: " + e.getMessage());
+                System.out.println("--> Error: Could not find the class for Employee");
             }
 
         }
-        return isSaved;
+        return false;
     }
 
     @Override
     public boolean equals(Object o) {
-
-
         if (this == o) return true;
         if (!(o instanceof Employee)) return false;
         Employee employee = (Employee) o;
-
-        if (getContact() != employee.getContact()) return false;
-        if (!getId().equals(employee.getId())) return false;
-        if (!firstName.equals(employee.firstName)) return false;
-        if (!lastName.equals(employee.lastName)) return false;
-        return getGender() == employee.getGender();
+        return getContact() == employee.getContact()
+                && firstName.equals(employee.firstName)
+                && lastName.equals(employee.lastName)
+                && getGender() == employee.getGender();
     }
 
     @Override
     public int hashCode() {
-        int result = getId().hashCode();
-        result = 31 * result + firstName.hashCode();
-        result = 31 * result + lastName.hashCode();
-        result = 31 * result + getGender().hashCode();
-        result = 31 * result + (int) (getContact() ^ (getContact() >>> 32));
-        return result;
+        return Objects.hash(firstName, lastName, getGender(), getContact());
     }
 
     @Override

@@ -8,6 +8,7 @@ public class Main {
     public static void main(String[] args) {
         Employee samora = new Employee("Samora", "Machel", 724484152);
         Employee joseph = new Employee("Joseph", "Otieno", 7000222);
+
         boolean saved = false;
         try {
             samora.save();
@@ -17,14 +18,9 @@ public class Main {
 
         samora.setName("Jonte", "Mariba");
 
-        try {
-            joseph.delete();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         for(Person person : Person.personList) {
-            System.out.println(person);
+            System.out.println(person.toString());
         }
 
 

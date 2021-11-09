@@ -2,8 +2,9 @@ package com.bank.Accounts;
 
 import com.bank.Persons.Person;
 
-public class SavingsAccount extends Account{
-    public SavingsAccount(Person person) {
+public class FixedDepositAccount extends Account {
+
+    public FixedDepositAccount(Person person) {
         super(person);
     }
 
@@ -19,7 +20,7 @@ public class SavingsAccount extends Account{
 
     @Override
     public String toString() {
-        return String.format("SavingsAccount{%s}");
+        return String.format("FixedDepositAccount{%s}");
     }
 }
 
