@@ -32,6 +32,6 @@ public class CurrentAccount extends Account {
 
     @Override
     public String toString() {
-        return String.format("CurrentAccount { user = %s }", this.getAccountOwner());
+        return String.format("CurrentAccount{ %s }", this.getAccountOwner());
     }
 }

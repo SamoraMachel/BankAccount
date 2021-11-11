@@ -7,8 +7,10 @@ import com.bank.Accounts.SavingsAccount;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Employee implements Person{
+    private final String id = UUID.randomUUID().toString();
     private String firstName = "";
     private String lastName = "";
     private Gender gender = Gender.MALE;
@@ -54,6 +56,7 @@ public class Employee implements Person{
         return this;
     }
 
+    @Override
     public String getId() {
         return id;
     }
@@ -187,9 +190,9 @@ public class Employee implements Person{
         return this.getClass();
     }
 
-    private boolean isEmployeeSaved() {
+    public boolean isEmployeeSaved() {
         for(Person person : this.personList) {
-            if(person.id.equals(this.id)) {
+            if(person.getId().equals(this.id)) {
                 return true;
             }
         }

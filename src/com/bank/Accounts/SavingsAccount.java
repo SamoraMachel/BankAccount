@@ -51,7 +51,7 @@ public class SavingsAccount extends Account{
 
     @Override
     public String toString() {
-        return String.format("SavingsAccount { user = %s }", getAccountOwner());
+        return String.format("SavingsAccount{ %s }", getAccountOwner());
     }
 }
 

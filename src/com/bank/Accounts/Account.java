@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 public abstract class Account {
-    static ArrayList<Account> accountList = new ArrayList<Account>();
+    private static final ArrayList<Account> accountList = new ArrayList<Account>();
 
-    private String accountNumber = UUID.randomUUID().toString();
+    private final String accountNumber = UUID.randomUUID().toString();
     private Person accountOwner = null;
     private long amount = 0;
     private LocalDate created = LocalDate.now();
@@ -67,6 +67,10 @@ public abstract class Account {
             }
         }
         throw new Exception(String.format("No account with ID -> $s", id));
+    }
+
+    public static ArrayList<Account> listAccount() {
+        return accountList;
     }
 
     private boolean isAccountSaved() {

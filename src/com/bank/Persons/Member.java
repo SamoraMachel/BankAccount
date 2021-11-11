@@ -7,8 +7,10 @@ import com.bank.Accounts.SavingsAccount;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Member implements Person{
+    private String id = UUID.randomUUID().toString();
     private String firstName;
     private String lastName;
     private long contact;
@@ -94,9 +96,9 @@ public class Member implements Person{
         }
     }
 
-    private boolean isMemberSaved() {
+    public boolean isMemberSaved() {
         for(Person person : this.personList) {
-            if(person.id.equals(this.id)) {
+            if(person.getId().equals(this.id)) {
                 return true;
             }
         }
@@ -140,6 +142,12 @@ public class Member implements Person{
             return true;
         }
     }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
 
     @Override
     public boolean delete() throws Exception {

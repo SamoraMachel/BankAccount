@@ -52,7 +52,7 @@ public class FixedDepositAccount extends Account {
 
     @Override
     public String toString() {
-        return String.format("FixedDepositAccount { user = %s }", getAccountOwner());
+        return String.format("FixedDepositAccount{ %s }", getAccountOwner());
     }
 }
 
