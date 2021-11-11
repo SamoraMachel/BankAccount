@@ -1,8 +1,6 @@
 package com.bank;
 
-import com.bank.Accounts.CurrentAccount;
-import com.bank.Accounts.FixedDepositAccount;
-import com.bank.Accounts.SavingsAccount;
+import com.bank.Accounts.*;
 import com.bank.Persons.Employee;
 import com.bank.Persons.Member;
 import com.bank.Persons.Person;
@@ -27,6 +25,7 @@ public class Main {
             e.printStackTrace();
         }
 
+        AccountFactory.create(AccountType.SAVINGS, samora);
 
         for(Person person : Person.personList) {
             System.out.println(person.toString());
