@@ -14,8 +14,9 @@ public class Employee implements Person{
     private Gender gender = Gender.MALE;
     private long Contact = 0;
     private long salary = 0;
-    private ArrayList<Account> accounts = new ArrayList<>();
+    private final ArrayList<Account> accounts = new ArrayList<>();
     private int accountIndex = 0;
+    private int salaryAccountIndex = -1;
 
     public Employee(String firstName, String lastName, long Contact) {
         this.setName(firstName, lastName);
@@ -48,6 +49,11 @@ public class Employee implements Person{
         return this;
     }
 
+    public Employee setSalaryAccountIndex(int salaryAccountIndex) {
+        this.salaryAccountIndex = salaryAccountIndex;
+        return this;
+    }
+
     public String getId() {
         return id;
     }
@@ -66,84 +72,6 @@ public class Employee implements Person{
 
     public ArrayList<Account> getAccounts() {
         return accounts;
-    }
-
-    @Override
-    public boolean save() throws Exception {
-        boolean isSaved = false;
-        if(this.firstName.equals("") || this.lastName.equals("") || this.Contact == 0) {
-            isSaved = false;
-            throw new Exception("Cannot save Employee with empty attributes. Set the name and Contact of the person");
-        } else if (isEmployeeSaved()) {
-            throw new Exception("Employee is already saved");
-        } else {
-            this.personList.add(this);
-            isSaved = true;
-        }
-        return isSaved;
-    }
-
-    public long getSalary() {
-        return salary;
-    }
-
-    @Override
-    public boolean delete() throws Exception {
-        boolean isDeleted = false;
-        boolean isEmployeeInList = this.isEmployeeSaved();
-
-        if(!isEmployeeInList) {
-            throw new Exception("Could not delete an employee who has not been saved");
-        } else {
-            this.personList.remove(this);
-            isDeleted = true;
-        }
-        return isDeleted;
-    }
-
-    public static boolean delete(Employee e) throws Exception {
-        boolean isEmployeeInList = e.isEmployeeSaved();
-
-        if(!isEmployeeInList) {
-            throw new Exception("Could not delete an employee who has not been saved");
-        } else {
-            Person.personList.remove(e);
-            return true;
-        }
-    }
-
-    @Override
-    public Class<?> personType() {
-        return this.getClass();
-    }
-
-    private boolean isEmployeeSaved() {
-        for(Person person : this.personList) {
-            try {
-                if(person.personType() == Class.forName("com.bank.Persons.Employee")) {
-                    Employee employee = ((Employee) person);
-                    if (employee.id == this.id) {
-                        return true;
-                    }
-                }
-            } catch (ClassNotFoundException e) {
-                System.out.println("---> Error: " + e.getMessage());
-                System.out.println("---> Error: Could not find the class for Employee");
-            }
-
-        }
-        return false;
-    }
-
-    public void useAccount(String accountNumber) throws Exception {
-        for(Account account : accounts) {
-            if(account.getAccountNumber().equals(accountNumber)) {
-                accountIndex = accounts.indexOf(account);
-                break;
-            } else {
-                throw new Exception(String.format("Account (%s) is not available", accountNumber));
-            }
-        }
     }
 
     public void useAccount(int index) throws Exception {
@@ -177,6 +105,106 @@ public class Employee implements Person{
         } else {
             SavingsAccount savingsAccount = (SavingsAccount) accounts.get(accountIndex);
             savingsAccount.withdraw(amount);
+        }
+    }
+
+    public long getSalary() {
+        return salary;
+    }
+
+    @Override
+    public boolean save() throws Exception {
+        if(this.firstName.equals("") || this.lastName.equals("") || this.Contact == 0) {
+            throw new Exception("Cannot save Employee with empty attributes. Set the name and Contact of the person");
+        } else if (isEmployeeSaved()) {
+            throw new Exception("Employee is already saved");
+        } else {
+            this.personList.add(this);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean delete() throws Exception {
+        boolean isDeleted = false;
+        boolean isEmployeeInList = this.isEmployeeSaved();
+
+        if(!isEmployeeInList) {
+            throw new Exception("Could not delete an employee who has not been saved");
+        } else {
+            this.personList.remove(this);
+            isDeleted = true;
+        }
+        return isDeleted;
+    }
+
+    public static boolean delete(Employee e) throws Exception {
+        boolean isEmployeeInList = e.isEmployeeSaved();
+
+        if(!isEmployeeInList) {
+            throw new Exception("Could not delete an employee who has not been saved");
+        } else {
+            Person.personList.remove(e);
+            return true;
+        }
+    }
+
+    public void paySalary() throws Exception {
+        if(accounts.size() == 0) {
+            throw new Exception("No account available");
+        } else if (salary == 0) {
+            throw new Exception("Salary has not been set");
+        } else {
+            for (Account account : accounts) {
+                if (account instanceof CurrentAccount) {
+                    CurrentAccount currentAccount = (CurrentAccount) account;
+                    currentAccount.receiveSalary();
+                }
+
+            }
+        }
+    }
+
+    public boolean deleteAccount(String accountNumber) throws Exception {
+        for(Account account : accounts) {
+            if(account.getAccountNumber().equals(accountNumber)) {
+                accounts.remove(account);
+                return true;
+            }
+        }
+        throw new Exception(String.format("No account with ID -> $s", id));
+    }
+
+    public void addAccount(Account account) {
+        accounts.add(account);
+        if(account instanceof CurrentAccount) {
+            salaryAccountIndex = accounts.indexOf(account);
+        }
+    }
+
+    @Override
+    public Class<?> personType() {
+        return this.getClass();
+    }
+
+    private boolean isEmployeeSaved() {
+        for(Person person : this.personList) {
+            if(person.id.equals(this.id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void useAccount(String accountNumber) throws Exception {
+        for(Account account : accounts) {
+            if(account.getAccountNumber().equals(accountNumber)) {
+                accountIndex = accounts.indexOf(account);
+                break;
+            } else {
+                throw new Exception(String.format("Account (%s) is not available", accountNumber));
+            }
         }
     }
 

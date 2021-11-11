@@ -16,12 +16,7 @@ public class Main {
 
 //        SavingsAccount userAccount1 = new SavingsAccount(justus);
         FixedDepositAccount userAccount2 = new FixedDepositAccount(joseph);
-        CurrentAccount userAccount3 = null;
-        try {
-            userAccount3 = new CurrentAccount(justus);
-        } catch (Exception e) {
-            System.out.println("---> Error : " + e.getMessage());
-        }
+        CurrentAccount userAccount3 = new CurrentAccount(joseph);
 
         boolean saved = false;
         try {

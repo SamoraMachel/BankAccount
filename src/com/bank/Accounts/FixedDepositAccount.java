@@ -1,5 +1,7 @@
 package com.bank.Accounts;
 
+import com.bank.Persons.Employee;
+import com.bank.Persons.Member;
 import com.bank.Persons.Person;
 
 public class FixedDepositAccount extends Account {
@@ -18,6 +20,20 @@ public class FixedDepositAccount extends Account {
         } else {
             setAmount(getAmount() - amount);
         }
+    }
+
+    @Override
+    public boolean saveAccount() {
+        boolean isSaved = super.saveAccount();
+        Person user = getAccountOwner();
+        if(user instanceof Member) {
+            Member member = (Member) user;
+            member.addAccount(this);
+        } else if(user instanceof Employee) {
+            Employee employee = (Employee) user;
+            employee.addAccount(this);
+        }
+        return isSaved;
     }
 
     public long checkBalance() {

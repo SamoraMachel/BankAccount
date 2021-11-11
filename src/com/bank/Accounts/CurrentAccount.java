@@ -1,15 +1,23 @@
 package com.bank.Accounts;
 
 import com.bank.Persons.Employee;
-import com.bank.Persons.Person;
 
 public class CurrentAccount extends Account {
-    public CurrentAccount(Person person) throws Exception {
-        if (!(person instanceof Employee)) {
-            throw new Exception("Could not create a current account for a user who is not employed");
-        } else {
-            this.setAccountOwner(person);
-        }
+    public CurrentAccount(Employee employee)  {
+        setAccountOwner(employee);
+    }
+
+    public void receiveSalary() {
+        Employee employee = (Employee) getAccountOwner();
+        setAmount(employee.getSalary() + getAmount());
+    }
+
+    @Override
+    public boolean saveAccount() {
+        boolean isSaved = super.saveAccount();
+        Employee employee = (Employee) getAccountOwner();
+        employee.addAccount(this);
+        return isSaved;
     }
 
     @Override

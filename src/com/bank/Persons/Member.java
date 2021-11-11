@@ -94,7 +94,40 @@ public class Member implements Person{
         }
     }
 
+    private boolean isMemberSaved() {
+        for(Person person : this.personList) {
+            if(person.id.equals(this.id)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public boolean deleteAccount(String accountNumber) throws Exception {
+        for(Account account : accounts) {
+            if(account.getAccountNumber().equals(accountNumber)) {
+                accounts.remove(account);
+                return true;
+            }
+        }
+        throw new Exception(String.format("No account with ID -> $s", id));
+    }
+
+    public void addAccount(Account account) {
+        accounts.add(account);
+    }
+
+    @Override
+    public void useAccount(String accountNumber) throws Exception {
+        for(Account account : accounts) {
+            if(account.getAccountNumber().equals(accountNumber)) {
+                accountIndex = accounts.indexOf(account);
+                break;
+            } else {
+                throw new Exception(String.format("Account (%s) is not available", accountNumber));
+            }
+        }
+    }
 
     @Override
     public boolean save() throws Exception {
@@ -106,23 +139,6 @@ public class Member implements Person{
             this.personList.add(this);
             return true;
         }
-    }
-
-    private boolean isMemberSaved() {
-        for(Person person : this.personList) {
-            try {
-                if(person.personType() == Class.forName("com.bank.Persons.Member")) {
-                    Member member= ((Member) person);
-                    if (member.id == this.id) {
-                        return true;
-                    }
-                }
-            } catch (ClassNotFoundException e) {
-                System.out.println("---> Error: " + e.getMessage());
-                System.out.println("---> Error: Could not find the class for Member");
-            }
-        }
-        return false;
     }
 
     @Override

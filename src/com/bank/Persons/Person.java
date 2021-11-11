@@ -1,5 +1,7 @@
 package com.bank.Persons;
 
+import com.bank.Accounts.Account;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -19,6 +21,8 @@ public interface Person {
         }
         return null;
     }
+
+    void useAccount(String accountNumber) throws Exception;
     boolean delete() throws Exception;
     <T> Class<?> personType();
 }
