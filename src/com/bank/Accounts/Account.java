@@ -12,11 +12,17 @@ public abstract class Account {
 
     private String accountNumber = UUID.randomUUID().toString();
     private Person accountOwner = null;
-    private int amount = 0;
+    private long amount = 0;
     private LocalDate created = LocalDate.now();
 
-    public void setAmount(int amount) {
+    public Account setAmount(long amount) {
         this.amount = amount;
+        return this;
+    }
+
+    public Account setAccountOwner(Person accountOwner) {
+        this.accountOwner = accountOwner;
+        return this;
     }
 
     public String getAccountNumber() {
@@ -27,7 +33,7 @@ public abstract class Account {
         return accountOwner;
     }
 
-    public int getAmount() {
+    public long getAmount() {
         return amount;
     }
 
@@ -35,24 +41,31 @@ public abstract class Account {
         return created;
     }
 
-    public Account(Person person) {
-        this.accountOwner = person;
-    }
-
-    Class<?> accountType(){
+    public Class<?> accountType(){
         return this.getClass();
     }
 
-    boolean saveAccount() {
+    public boolean saveAccount() {
         return accountList.add(this);
     }
-    boolean deleteAccount(){
+
+    public boolean deleteAccount(){
         boolean isAccountInList = this.isAccountSaved();
         if(isAccountInList) {
             accountList.remove(this);
             return true;
         }
         return false;
+    }
+
+    public static boolean deleteAccount(String id) throws Exception {
+        for(Account account : accountList) {
+            if(account.accountNumber == id) {
+                accountList.remove(account);
+                return true;
+            }
+        }
+        throw new Exception(String.format("No account with ID -> $s", id));
     }
 
     private boolean isAccountSaved() {

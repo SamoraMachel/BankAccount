@@ -9,7 +9,7 @@ enum Gender {
 
 public interface Person {
     String id = UUID.randomUUID().toString();
-    static ArrayList<Person> personList = new ArrayList<Person>();
+    ArrayList<Person> personList = new ArrayList<>();
 
     boolean save() throws Exception;
     static Person search(String id) {

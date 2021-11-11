@@ -1,13 +1,21 @@
 package com.bank.Persons;
 
+import com.bank.Accounts.Account;
+import com.bank.Accounts.CurrentAccount;
+import com.bank.Accounts.FixedDepositAccount;
+import com.bank.Accounts.SavingsAccount;
+
+import java.util.ArrayList;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Employee implements Person{
     private String firstName = "";
     private String lastName = "";
     private Gender gender = Gender.MALE;
     private long Contact = 0;
+    private long salary = 0;
+    private ArrayList<Account> accounts = new ArrayList<>();
+    private int accountIndex = 0;
 
     public Employee(String firstName, String lastName, long Contact) {
         this.setName(firstName, lastName);
@@ -35,6 +43,11 @@ public class Employee implements Person{
         return this;
     }
 
+    public Employee setSalary(long salary) {
+        this.salary = salary;
+        return this;
+    }
+
     public String getId() {
         return id;
     }
@@ -49,6 +62,10 @@ public class Employee implements Person{
 
     public long getContact() {
         return Contact;
+    }
+
+    public ArrayList<Account> getAccounts() {
+        return accounts;
     }
 
     @Override
@@ -66,6 +83,10 @@ public class Employee implements Person{
         return isSaved;
     }
 
+    public long getSalary() {
+        return salary;
+    }
+
     @Override
     public boolean delete() throws Exception {
         boolean isDeleted = false;
@@ -77,11 +98,8 @@ public class Employee implements Person{
             this.personList.remove(this);
             isDeleted = true;
         }
-
         return isDeleted;
     }
-
-
 
     public static boolean delete(Employee e) throws Exception {
         boolean isEmployeeInList = e.isEmployeeSaved();
@@ -107,15 +125,59 @@ public class Employee implements Person{
                     if (employee.id == this.id) {
                         return true;
                     }
-
                 }
             } catch (ClassNotFoundException e) {
-                System.out.println("--> Error: " + e.getMessage());
-                System.out.println("--> Error: Could not find the class for Employee");
+                System.out.println("---> Error: " + e.getMessage());
+                System.out.println("---> Error: Could not find the class for Employee");
             }
 
         }
         return false;
+    }
+
+    public void useAccount(String accountNumber) throws Exception {
+        for(Account account : accounts) {
+            if(account.getAccountNumber().equals(accountNumber)) {
+                accountIndex = accounts.indexOf(account);
+                break;
+            } else {
+                throw new Exception(String.format("Account (%s) is not available", accountNumber));
+            }
+        }
+    }
+
+    public void useAccount(int index) throws Exception {
+        if(accounts.get(index) != null){
+            accountIndex = index;
+        }
+    }
+
+    public void deposit(long amount) throws Exception {
+        if (accounts.size() == 0) {
+            throw new Exception("Cannot deposit without any Account");
+        } else if ( accounts.get(accountIndex) instanceof CurrentAccount) {
+            throw  new Exception("Cannot deposit in a Current Account");
+        } else if ( accounts.get(accountIndex) instanceof FixedDepositAccount) {
+            FixedDepositAccount depositAccount = (FixedDepositAccount) accounts.get(accountIndex);
+            depositAccount.deposit(amount);
+        } else {
+            SavingsAccount savingsAccount = (SavingsAccount) accounts.get(accountIndex);
+            savingsAccount.deposit(amount);
+        }
+    }
+
+    public void withdraw(long amount) throws Exception {
+        if (accounts.size() == 0) {
+            throw new Exception("Cannot withdraw without any Account");
+        } else if ( accounts.get(accountIndex) instanceof CurrentAccount) {
+            throw new Exception("Cannot withdraw from a Current Account");
+        } else if ( accounts.get(accountIndex) instanceof FixedDepositAccount) {
+            FixedDepositAccount depositAccount = (FixedDepositAccount) accounts.get(accountIndex);
+            depositAccount.withdraw(amount);
+        } else {
+            SavingsAccount savingsAccount = (SavingsAccount) accounts.get(accountIndex);
+            savingsAccount.withdraw(amount);
+        }
     }
 
     @Override

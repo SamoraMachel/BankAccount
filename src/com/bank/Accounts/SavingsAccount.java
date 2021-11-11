@@ -4,7 +4,23 @@ import com.bank.Persons.Person;
 
 public class SavingsAccount extends Account{
     public SavingsAccount(Person person) {
-        super(person);
+        this.setAccountOwner(person);
+    }
+
+    public void deposit(long amount) {
+        setAmount(getAmount() + amount);
+    }
+
+    public void withdraw(long amount) throws Exception {
+        if(amount > getAmount()) {
+            throw new Exception("Insufficient funds to perform the operation");
+        } else {
+            setAmount(getAmount() - amount);
+        }
+    }
+
+    public long checkBalance() {
+        return getAmount();
     }
 
     @Override
@@ -19,7 +35,7 @@ public class SavingsAccount extends Account{
 
     @Override
     public String toString() {
-        return String.format("SavingsAccount{%s}");
+        return String.format("SavingsAccount { user = %s }", getAccountOwner());
     }
 }
 
