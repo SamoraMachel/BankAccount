@@ -76,24 +76,27 @@ public class Member implements Person{
         if (accounts.size() == 0) {
             throw new Exception("Cannot withdraw without any Account");
         } else if ( accounts.get(accountIndex) instanceof FixedDepositAccount) {
-            FixedDepositAccount depositAccount = (FixedDepositAccount) accounts.get(accountIndex);
-            depositAccount.withdraw(amount);
-        } else {
+            throw new Exception("Cannot withdraw from a Fixed Deposit Account");
+        } else if ( accounts.get(accountIndex) instanceof SavingsAccount) {
             SavingsAccount savingsAccount = (SavingsAccount) accounts.get(accountIndex);
             savingsAccount.withdraw(amount);
         }
     }
 
-    public void deposit(long amount) throws Exception {
+    public void deposit(long amount, int years) throws Exception {
         if (accounts.size() == 0) {
             throw new Exception("Cannot deposit without any Account");
         } else if ( accounts.get(accountIndex) instanceof FixedDepositAccount) {
             FixedDepositAccount depositAccount = (FixedDepositAccount) accounts.get(accountIndex);
-            depositAccount.deposit(amount);
+            depositAccount.deposit(amount, years);
         } else {
             SavingsAccount savingsAccount = (SavingsAccount) accounts.get(accountIndex);
             savingsAccount.deposit(amount);
         }
+    }
+
+    public void deposit (long amount) throws Exception {
+        this.deposit(amount, 0);
     }
 
     public boolean isMemberSaved() {
@@ -147,7 +150,6 @@ public class Member implements Person{
     public String getId() {
         return id;
     }
-
 
     @Override
     public boolean delete() throws Exception {

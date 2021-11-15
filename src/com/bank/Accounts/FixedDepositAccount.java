@@ -5,20 +5,24 @@ import com.bank.Persons.Member;
 import com.bank.Persons.Person;
 
 public class FixedDepositAccount extends Account {
+    private int interest = 0;
+
+    public int getInterest() {
+        return interest;
+    }
 
     public FixedDepositAccount(Person person) {
         this.setAccountOwner(person);
     }
 
-    public void deposit(long amount) {
-        setAmount(getAmount() + amount);
-    }
-
-    public void withdraw(long amount) throws Exception {
-        if(amount > getAmount()) {
-            throw new Exception("Insufficient funds to perform the operation");
+    public void deposit(long amount, int years) throws Exception {
+        if( years == 0) {
+            throw new Exception("A specific duration is required while depositing in a fixed account. Measured in years");
+        } else if ( years < 0) {
+            throw new Exception("A time duration cannot be declared in a negative value");
         } else {
-            setAmount(getAmount() - amount);
+            interest = (int) (getAmount() * 0.05 * years);
+            setAmount(getAmount() + amount + getInterest());
         }
     }
 
@@ -34,10 +38,6 @@ public class FixedDepositAccount extends Account {
             employee.addAccount(this);
         }
         return isSaved;
-    }
-
-    public long checkBalance() {
-        return getAmount();
     }
 
     @Override

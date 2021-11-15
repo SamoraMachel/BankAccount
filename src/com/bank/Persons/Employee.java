@@ -83,18 +83,22 @@ public class Employee implements Person{
         }
     }
 
-    public void deposit(long amount) throws Exception {
+    public void deposit(long amount, int years) throws Exception {
         if (accounts.size() == 0) {
             throw new Exception("Cannot deposit without any Account");
         } else if ( accounts.get(accountIndex) instanceof CurrentAccount) {
             throw  new Exception("Cannot deposit in a Current Account");
         } else if ( accounts.get(accountIndex) instanceof FixedDepositAccount) {
             FixedDepositAccount depositAccount = (FixedDepositAccount) accounts.get(accountIndex);
-            depositAccount.deposit(amount);
+            depositAccount.deposit(amount, years);
         } else {
             SavingsAccount savingsAccount = (SavingsAccount) accounts.get(accountIndex);
             savingsAccount.deposit(amount);
         }
+    }
+
+    public void deposit(long amount) throws Exception {
+        this.deposit(amount, 0);
     }
 
     public void withdraw(long amount) throws Exception {
@@ -103,8 +107,7 @@ public class Employee implements Person{
         } else if ( accounts.get(accountIndex) instanceof CurrentAccount) {
             throw new Exception("Cannot withdraw from a Current Account");
         } else if ( accounts.get(accountIndex) instanceof FixedDepositAccount) {
-            FixedDepositAccount depositAccount = (FixedDepositAccount) accounts.get(accountIndex);
-            depositAccount.withdraw(amount);
+            throw new Exception("Cannot withdraw from a Fixed Account");
         } else {
             SavingsAccount savingsAccount = (SavingsAccount) accounts.get(accountIndex);
             savingsAccount.withdraw(amount);
